@@ -13,8 +13,8 @@ using App.ApplicationCore.Services;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddRazorPages();
-builder.Services.AddControllers();
+
+
 
 builder.Services.AddDbContext<ApplicationDbContext>((serviceProvider, options) =>
 {
@@ -28,6 +28,8 @@ builder.Services.AddDbContext<ApplicationDbContext>((serviceProvider, options) =
 
 });
 
+builder.Services.AddControllers();
+
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 
 
@@ -39,12 +41,17 @@ builder.Services.AddScoped<PasswordService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IJwtManager, JwtManager>();
 
+
+builder.Services.AddHttpContextAccessor();
+
 // Configure JwtOptions
 builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection("JwtOptions"));
 
 // Configure JwtBearereOptions
 JwtConfiguration.ConfigureJwt(builder.Services, builder.Configuration);
 
+
+//configuration swagger
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
@@ -74,7 +81,7 @@ builder.Services.AddSwaggerGen(options =>
     options.OperationFilter<SecurityRequirementsOperationFilter>();
 });
 
-
+//automapper
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
 
 
@@ -88,12 +95,13 @@ app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "Applicati
 app.UseCors();
 
 app.UseHttpsRedirection();
-app.UseStaticFiles();
+
 
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
-app.MapRazorPages();
+
 app.MapControllers();
+
 app.Run();
 

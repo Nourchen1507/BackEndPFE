@@ -11,7 +11,7 @@ namespace App.ApplicationCore.Interfaces
 {
     public interface IGenericRepository<TEntity> where TEntity : BaseEntity 
     {
-        Task<IEnumerable<TEntity>> GetAllAsync(QueryOptions queryOptions);
+        Task<IEnumerable<TEntity>> GetAllAsync();
         Task<TEntity> AddAsync(TEntity entity);
         Task<TEntity> GetByIdAsync(Guid entityId);
         Task<TEntity> UpdateAsync(Guid entityId, TEntity entity);

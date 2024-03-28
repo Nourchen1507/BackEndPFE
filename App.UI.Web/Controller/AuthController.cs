@@ -26,7 +26,7 @@ namespace App.UI.Web.Controller
         }
 
         [HttpPost("login")]
-        [Authorize]
+     
         public async Task<ActionResult<string>> AuthenticateUserAsync([FromBody] UserCredentialsDto userCredentials)
         {
             return Ok(await _authService.AutheticateUser(userCredentials));
@@ -34,7 +34,7 @@ namespace App.UI.Web.Controller
 
 
         [HttpPost("token")]
-        [Authorize]
+       
         public async Task<ActionResult<string>> RefreshTokenAsync([FromBody] string token)
         {
             return Ok(await _authService.RefreshToken(token));

@@ -11,7 +11,7 @@ namespace App.ApplicationCore.Interfaces
 {
     public interface IUserService 
     {
-        Task<IEnumerable<ReadUserDto>> GetAllUsersAsync(QueryOptions queryOptions);
+        Task<IEnumerable<ReadUserDto>> GetAllUsersAsync();
         Task<ReadUserDto> CreateUserAsync(CreateUserDto userDto);
         Task<ReadUserDto> CreateAdminAsync(CreateUserDto userDto);
         Task<ReadUserDto> GetUserByIdAsync(Guid userId);

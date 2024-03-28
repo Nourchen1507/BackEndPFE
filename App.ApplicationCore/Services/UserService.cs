@@ -141,9 +141,9 @@ namespace App.ApplicationCore.Services
             return await _userRepository.DeleteByIdAsync(userId);
         }
 
-        public async Task<IEnumerable<ReadUserDto>> GetAllUsersAsync(QueryOptions queryOptions)
+        public async Task<IEnumerable<ReadUserDto>> GetAllUsersAsync()
         {
-            var users = await _userRepository.GetAllAsync(queryOptions);
+            var users = await _userRepository.GetAllAsync();
             var readUserDtos = _mapper.Map<IEnumerable<ReadUserDto>>(users);
             return readUserDtos;
         }

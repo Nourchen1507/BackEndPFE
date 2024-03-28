@@ -64,47 +64,9 @@ namespace App.Infrastructure
             return true;
         }
 
-        public async Task<IEnumerable<TEntity>> GetAllAsync(QueryOptions queryOptions)
+        public async Task<IEnumerable<TEntity>> GetAllAsync()
         {
-            IQueryable<TEntity> query = _dbSet;
-
-            if (!string.IsNullOrEmpty(queryOptions.SearchKeyword))
-            {
-                var entityProperties = typeof(TEntity).GetProperties();
-                var searchableProperties = entityProperties
-                    .Where(property => property.PropertyType == typeof(string))
-                    .ToList();
-
-                var parameter = Expression.Parameter(typeof(TEntity), "entity");
-                var orConditions = new List<Expression>();
-
-                foreach (var property in searchableProperties)
-                {
-                    var propertyAccess = Expression.Property(parameter, property);
-                    var toLowerMethod = typeof(string).GetMethod("ToLower", Type.EmptyTypes);
-                    var callToLower = Expression.Call(propertyAccess, toLowerMethod);
-                    var searchValueLower = queryOptions.SearchKeyword.ToLower(); // Convert to lowercase
-                    var searchValue = Expression.Constant(searchValueLower, typeof(string));
-                    var containsMethod = typeof(string).GetMethod("Contains", new[] { typeof(string) });
-                    var containsCall = Expression.Call(callToLower, containsMethod, searchValue);
-                    orConditions.Add(containsCall);
-                }
-
-                if (orConditions.Any())
-                {
-                    var combinedCondition = orConditions.Aggregate(Expression.OrElse);
-                    var lambda = Expression.Lambda<Func<TEntity, bool>>(combinedCondition, parameter);
-                    query = query.Where(lambda);
-                }
-            }
-
-            var orderBy = $"{queryOptions.SortBy} {(queryOptions.SortDescending ? "desc" : "asc")}";
-            //query = query.OrderBy(orderBy);
-
-            query = query.Skip((queryOptions.PageNumber - 1) * queryOptions.PageSize)
-                .Take(queryOptions.PageSize);
-
-            var entities = await query.AsNoTracking().ToListAsync();
+            var entities = await _dbSet.AsNoTracking().ToListAsync();
             return entities;
         }
 

@@ -23,15 +23,15 @@ namespace App.UI.Web.Controller
         }
 
         [HttpGet]
-        [Authorize(Roles = "Admin")]
-        public async Task<ActionResult<IEnumerable<ReadUserDto>>> GetAllUsersAsync([FromQuery] QueryOptions queryOptions)
+        //[Authorize(Roles = "Admin")]
+        public async Task<ActionResult<IEnumerable<ReadUserDto>>> GetAllUsersAsync()
         {
-            var users = await _userService.GetAllUsersAsync(queryOptions);
+            var users = await _userService.GetAllUsersAsync();
             return Ok(users);
         }
 
         [HttpPost]
-        [Authorize]
+      
         public async Task<ActionResult<ReadUserDto>> CreateUserAsync([FromBody] CreateUserDto createUserDto)
         {
             if (!ModelState.IsValid)
