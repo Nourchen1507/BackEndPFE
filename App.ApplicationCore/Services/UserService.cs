@@ -98,7 +98,7 @@ namespace App.ApplicationCore.Services
                     }
                 }
 
-                bool IsValidEmail = Common.Validator.IsValidEmail(sanitizedDto.Email);
+                bool IsValidEmail = Validator.IsValidEmail(sanitizedDto.Email);
 
                 if (!IsValidEmail)
                 {
@@ -131,6 +131,7 @@ namespace App.ApplicationCore.Services
             }
         }
 
+
         public async Task<bool> DeleteUserByIdAsync(Guid userId)
         {
             var user = await _userRepository.GetByIdAsync(userId);
@@ -148,13 +149,7 @@ namespace App.ApplicationCore.Services
             return readUserDtos;
         }
 
-        public async Task<ReadUserDto> GetUserByEmailAsync(string email)
-        {
-            var user = await _userRepository.GetUserByEmailAsync(email);
-            var readUserDto = _mapper.Map<ReadUserDto>(user);
-            return readUserDto;
-        }
-
+      
         public async Task<ReadUserDto> GetUserByIdAsync(Guid userId)
         {
             var user = await _userRepository.GetByIdAsync(userId);
@@ -162,6 +157,43 @@ namespace App.ApplicationCore.Services
             return readUserDto;
         }
 
-    }
 
+
+        public async Task<ReadUserDto> UpdateUserAsync(Guid userId, UpdateUserDto updateUserDto)
+        {
+            try
+            {
+                var existingUser = await _userRepository.GetByIdAsync(userId);
+                if (existingUser == null)
+                {
+                    throw new ArgumentException($"User with ID {userId} not found.");
+                }
+
+                var userDtoProperties = typeof(UpdateUserDto).GetProperties();
+                foreach (var property in userDtoProperties)
+                {
+                    var dtoValue = property.GetValue(updateUserDto);
+                    if (dtoValue != null)
+                    {
+                        var userProperty = existingUser.GetType().GetProperty(property.Name);
+                        userProperty.SetValue(existingUser, dtoValue);
+                    }
+                }
+                existingUser = await _userRepository.UpdateAsync(userId, existingUser);
+                var readUserDto = _mapper.Map<ReadUserDto>(existingUser);
+                return readUserDto;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error: " + ex.Message);
+
+                if (ex.InnerException != null)
+                {
+                    Console.WriteLine("Inner exception: " + ex.InnerException.Message);
+                }
+                throw;
+            }
+        }
+    }
 }
+

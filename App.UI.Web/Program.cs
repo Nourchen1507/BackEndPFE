@@ -28,6 +28,7 @@ builder.Services.AddDbContext<ApplicationDbContext>((serviceProvider, options) =
 
 });
 
+
 builder.Services.AddControllers();
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
@@ -81,6 +82,13 @@ builder.Services.AddSwaggerGen(options =>
     options.OperationFilter<SecurityRequirementsOperationFilter>();
 });
 
+builder.Services.AddCors(options => options.AddPolicy(name: "UsersOrigins",
+    policy => {
+        policy.WithOrigins("http://localhost:4200").AllowAnyMethod().AllowAnyHeader();
+
+    }));
+
+
 //automapper
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
 
@@ -92,7 +100,7 @@ app.UseDeveloperExceptionPage();
 app.UseSwagger();
 app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "Application E-commerce"); });
 
-app.UseCors();
+app.UseCors("UsersOrigins");
 
 app.UseHttpsRedirection();
 

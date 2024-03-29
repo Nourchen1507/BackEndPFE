@@ -32,11 +32,19 @@ namespace App.Infrastructure.Repositories
         public async Task<User> GetUserByEmailAsync(string email)
         {
             return await _users.AsNoTracking().FirstOrDefaultAsync(u => u.Email.ToLower() == email.ToLower());
-                }
+        }
 
-            public Task<User> UpdatePassword(string email, string PasswordHash)
+        public async Task<User> UpdatePassword(string email, string PasswordHash)
         {
-            throw new NotImplementedException();
+            var user = await GetUserByEmailAsync(email);
+            if (user == null)
+            {
+                return null;
+            }
+            user.PasswordHash = PasswordHash;
+            await _applicationDbContext.SaveChangesAsync();
+            return user;
         }
     }
+
 }

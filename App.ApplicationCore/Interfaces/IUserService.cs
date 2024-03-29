@@ -15,8 +15,8 @@ namespace App.ApplicationCore.Interfaces
         Task<ReadUserDto> CreateUserAsync(CreateUserDto userDto);
         Task<ReadUserDto> CreateAdminAsync(CreateUserDto userDto);
         Task<ReadUserDto> GetUserByIdAsync(Guid userId);
-        Task<ReadUserDto> GetUserByEmailAsync(string email);
-        //Task<ReadUserDto> UpdateUserAsync(Guid userId, UpdateUserDto userDto);
+        
+        Task<ReadUserDto> UpdateUserAsync(Guid userId, UpdateUserDto userDto);
         Task<bool> DeleteUserByIdAsync(Guid userId);
     }
 }
