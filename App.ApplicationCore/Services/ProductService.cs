@@ -27,10 +27,7 @@ namespace App.ApplicationCore.Services
             _sanitizerService = sanitizerService;
             _categoryRepository = categoryRepository;
         }
-      
-
-
-
+    
 
         public async Task<ReadProductDto> CreateProductAsync(CreateProductDto createProductDto)
         {
@@ -64,7 +61,7 @@ namespace App.ApplicationCore.Services
                 var newProduct = _mapper.Map<Product>(sanitizedDto);
                 newProduct = await _productRepository.AddAsync(newProduct);
 
-                // var category = await _categoryRepository.GetByIdAsync(newProduct.CategoryId);
+                //var category = await _categoryRepository.GetByIdAsync(newProduct.CategoryId);
                 var readProductDto = _mapper.Map<ReadProductDto>(newProduct);
                 readProductDto.Category = _mapper.Map<ReadCategoryDto>(category);
                 return readProductDto;
@@ -115,19 +112,47 @@ namespace App.ApplicationCore.Services
             return readProductDto;
         }
 
-       
+        public async Task<ReadProductDto> UpdateProductAsync(Guid productId, UpdateProductDto updateProductDto)
+        {
+            try
+            {
+                var sanitizedDto = _sanitizerService.SanitizeDto(updateProductDto);
 
+                var existingProduct = await _productRepository.GetByIdAsync(productId)
+                    ?? throw new ArgumentException($"No Product with ID `{productId}` was found.");
 
+                var existingProductDto = _mapper.Map<UpdateProductDto>(existingProduct);
 
+                var updateProductDtoProperties = typeof(UpdateProductDto).GetProperties();
+                foreach (var property in updateProductDtoProperties)
+                {
+                    var dtoValue = property.GetValue(sanitizedDto);
+                    if (dtoValue is null or (object)"")
+                    {
+                        throw new ArgumentException($"{property.Name} is required.");
+                    }
 
+                    var product = existingProductDto.GetType().GetProperty(property.Name);
+                    product.SetValue(existingProductDto, dtoValue);
 
+                }
+                _mapper.Map(existingProductDto, existingProduct);
 
+                var updateProduct = await _productRepository.UpdateAsync(existingProduct.Id, existingProduct);
+                var category = await _categoryRepository.GetByIdAsync(existingProduct.CategoryId);
 
-
-
-
-
-
-
-}
+                var readProductDto = _mapper.Map<ReadProductDto>(updateProduct);
+                readProductDto.Category = _mapper.Map<ReadCategoryDto>(category);
+                return readProductDto;
+            }
+            catch (Exception ex)
+            {
+                if (ex.InnerException != null)
+                {
+                    Console.WriteLine($"Inner Exception: {ex.InnerException.Message}");
+                }
+                throw;
+            }
+        }
+    }
 }

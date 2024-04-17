@@ -8,6 +8,7 @@ using Swashbuckle.AspNetCore.Filters;
 using App.ApplicationCore.Interfaces;
 using App.Infrastructure.Repositories;
 using App.ApplicationCore.Services;
+using App.ApplicationCore.Domain.Entities;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -25,17 +26,31 @@ builder.Services.AddDbContext<ApplicationDbContext>((serviceProvider, options) =
         sqlServerOptions.EnableRetryOnFailure();
 
     });
-
+    builder.MapEnum<UserRole>();
+    builder.MapEnum<OrderStatus>();
+   
+    options.AddInterceptors(new TimeStampInterceptor());
 });
 
 
 builder.Services.AddControllers();
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+
+
 
 
 builder.Services.AddScoped<ISanitizerService, SanitizerService>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddScoped<IOrderService, OrderService>();
+
+
+
 builder.Services.AddScoped<PasswordService>();
 
 
@@ -82,7 +97,7 @@ builder.Services.AddSwaggerGen(options =>
     options.OperationFilter<SecurityRequirementsOperationFilter>();
 });
 
-builder.Services.AddCors(options => options.AddPolicy(name: "UsersOrigins",
+builder.Services.AddCors(options => options.AddPolicy(name: "",
     policy => {
         policy.WithOrigins("http://localhost:4200").AllowAnyMethod().AllowAnyHeader();
 
@@ -100,7 +115,7 @@ app.UseDeveloperExceptionPage();
 app.UseSwagger();
 app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "Application E-commerce"); });
 
-app.UseCors("UsersOrigins");
+app.UseCors("");
 
 app.UseHttpsRedirection();
 

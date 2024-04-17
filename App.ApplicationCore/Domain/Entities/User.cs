@@ -17,6 +17,10 @@ namespace App.ApplicationCore.Domain.Entities
         [Required]
         public string Email { get; set; }
         [Required]
+        public string Addresse { get; set; }
+        [Required]
+        public string Phone { get; set; }
+        [Required]
         public string PasswordHash { get; set; }
 
 

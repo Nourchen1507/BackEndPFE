@@ -24,8 +24,6 @@ namespace App.Infrastructure.Persistance
         public ApplicationDbContext()
         {
 
-
-
         }
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options, IConfiguration configuration)
         : base(options)

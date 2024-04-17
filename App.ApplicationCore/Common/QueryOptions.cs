@@ -8,10 +8,6 @@ namespace App.ApplicationCore.Common
 {
     public class QueryOptions
     {
-
-
-
-
         public string? SearchKeyword { get; set; } = null;
          public string SortBy { get; set; } = "UpdatedAt";
         public bool SortDescending { get; set; } = false;

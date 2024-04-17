@@ -11,10 +11,7 @@ namespace App.UI.Web.Authentification
 {
     public class JwtManager : IJwtManager
 
-
     {
-
-
         private readonly JwtOptions _jwtOptions;
         private readonly IUserRepository _userRepository;
 
