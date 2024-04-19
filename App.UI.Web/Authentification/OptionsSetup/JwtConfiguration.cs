@@ -17,7 +17,7 @@ namespace App.UI.Web.Authentification.OptionsSetup
 
                 options.Issuer = jwtOptions.Issuer;
                 options.Audience = jwtOptions.Audience;
-                options.SecretKey = jwtOptions.SecretKey;   
+               // options.SecretKey = jwtOptions.SecretKey;   
             });
             services.AddSingleton<IConfigureOptions<JwtBearerOptions>, JwtBearerOptionsSetup>();
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -31,8 +31,8 @@ namespace App.UI.Web.Authentification.OptionsSetup
                         ValidateIssuerSigningKey = true,
                         ValidIssuer = jwtOptions.Issuer,
                         ValidAudience = jwtOptions.Audience,
-                        IssuerSigningKey = new SymmetricSecurityKey(
-                            Encoding.UTF8.GetBytes(jwtOptions.SecretKey))
+                        //IssuerSigningKey = new SymmetricSecurityKey(
+                            //Encoding.UTF8.GetBytes(jwtOptions.SecretKey))
                     };
                 });
         }

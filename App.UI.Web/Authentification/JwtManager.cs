@@ -22,35 +22,29 @@ namespace App.UI.Web.Authentification
 
         public string GenerateAccessToken(User user)
         {
-
-
-            var claims = new List<Claim>{
-                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                new Claim(ClaimTypes.Email, user.Email),
-                new Claim(ClaimTypes.Role, user.Role.ToString()),
-            };
-
-            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtOptions.SecretKey));
-            var signingCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+            var claims = new List<Claim>
+    {
+        new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+        new Claim(ClaimTypes.Email, user.Email),
+        new Claim(ClaimTypes.Role, user.Role.ToString()),
+    };
 
             var securityTokenDescriptor = new SecurityTokenDescriptor
             {
                 Issuer = _jwtOptions.Issuer,
                 Expires = DateTime.Now.AddDays(1),
                 Subject = new ClaimsIdentity(claims),
-                SigningCredentials = signingCredentials,
                 Audience = _jwtOptions.Audience,
             };
+
             var token = new JwtSecurityTokenHandler().CreateToken(securityTokenDescriptor);
-            string tokenValue = new JwtSecurityTokenHandler()
-                .WriteToken(token);
+            string tokenValue = new JwtSecurityTokenHandler().WriteToken(token);
             return tokenValue;
         }
-
         public async Task<string> RefreshAccessToken(string refreshToken)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
-            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtOptions.SecretKey));
+            //var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtOptions.SecretKey));
 
             var validationParameters = new TokenValidationParameters
             {
@@ -60,8 +54,8 @@ namespace App.UI.Web.Authentification
                 ValidateIssuerSigningKey = true,
                 ValidIssuer = _jwtOptions.Issuer,
                 ValidAudience = _jwtOptions.Audience,
-                IssuerSigningKey = new SymmetricSecurityKey(
-                    Encoding.UTF8.GetBytes(_jwtOptions.SecretKey))
+                //IssuerSigningKey = new SymmetricSecurityKey(
+                   // Encoding.UTF8.GetBytes(_jwtOptions.SecretKey))
 
             };
             ClaimsPrincipal claimsPrincipal = tokenHandler.ValidateToken

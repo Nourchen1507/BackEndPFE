@@ -33,7 +33,7 @@ namespace App.Infrastructure
                 {
                     if (userEntity.Role != UserRole.Admin)
                     {
-                        userEntity.Role = UserRole.Customer;
+                        userEntity.Role = UserRole.Client;
                     }
                 }
                 var entry = await _dbSet.AddAsync(entity);

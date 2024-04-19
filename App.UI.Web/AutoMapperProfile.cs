@@ -50,15 +50,7 @@ namespace App.UI.Web
             CreateMap<Order, OrderItemDto>();
 
 
-
-
-
         }
-
-
-
-
-
 
     }
 }

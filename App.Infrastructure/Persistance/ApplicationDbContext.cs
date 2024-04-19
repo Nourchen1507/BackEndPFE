@@ -36,7 +36,10 @@ namespace App.Infrastructure.Persistance
            
         }
 
-        public DbSet<User> Users { get; set; }
+       
+    
+
+    public DbSet<User> Users { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Order> Orders { get; set; }
@@ -45,8 +48,17 @@ namespace App.Infrastructure.Persistance
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+
+
+            
+
+
             modelBuilder.Entity<User>(entity =>
             {
+
+               
+
+
                 entity.HasKey(u => u.Id);
                 entity.HasIndex(u => u.Email).IsUnique();
                 entity.Property(u => u.FirstName).IsRequired();
@@ -72,6 +84,7 @@ namespace App.Infrastructure.Persistance
             modelBuilder.Entity<Order>(entity =>
             {
                 entity.HasKey(o => o.Id);
+                entity.Property(o => o.OrderStatus).HasConversion<string>();
             });
 
             modelBuilder.Entity<OrderItem>(entity =>

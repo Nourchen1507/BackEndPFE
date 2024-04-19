@@ -9,6 +9,7 @@ using App.ApplicationCore.Interfaces;
 using App.Infrastructure.Repositories;
 using App.ApplicationCore.Services;
 using App.ApplicationCore.Domain.Entities;
+using Microsoft.Extensions.Options;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -26,11 +27,18 @@ builder.Services.AddDbContext<ApplicationDbContext>((serviceProvider, options) =
         sqlServerOptions.EnableRetryOnFailure();
 
     });
-    builder.MapEnum<UserRole>();
-    builder.MapEnum<OrderStatus>();
-   
+  
     options.AddInterceptors(new TimeStampInterceptor());
+
+   // options.UseModelBuilder(modelBuilder =>
+    ///{
+    //    modelBuilder.ConfigureEnumConversions();
+   // });
 });
+
+
+
+
 
 
 builder.Services.AddControllers();
