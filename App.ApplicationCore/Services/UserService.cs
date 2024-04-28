@@ -3,6 +3,8 @@ using App.ApplicationCore.Domain.Dtos.UserDtos;
 using App.ApplicationCore.Domain.Entities;
 using App.ApplicationCore.Interfaces;
 using AutoMapper;
+using System.Security.Claims;
+
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -10,11 +12,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Validator = App.ApplicationCore.Common.Validator;
+using Microsoft.AspNetCore.Http;
 
 namespace App.ApplicationCore.Services
 {
     public class UserService : IUserService
     {
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
 
 
@@ -22,11 +26,15 @@ namespace App.ApplicationCore.Services
         private readonly ISanitizerService _sanitizerService;
         private readonly IMapper _mapper;
 
-        public UserService(IUserRepository userRepository, ISanitizerService sanitizerService, IMapper mapper)
+        
+
+
+        public UserService(IUserRepository userRepository, IHttpContextAccessor httpContextAccessor, ISanitizerService sanitizerService, IMapper mapper)
         {
             _userRepository = userRepository;
             _sanitizerService = sanitizerService;
             _mapper = mapper;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public async Task<ReadUserDto> CreateUserAsync(CreateUserDto userDto)
@@ -131,7 +139,6 @@ namespace App.ApplicationCore.Services
             }
         }
 
-
         public async Task<bool> DeleteUserByIdAsync(Guid userId)
         {
             var user = await _userRepository.GetByIdAsync(userId);
@@ -149,15 +156,19 @@ namespace App.ApplicationCore.Services
             return readUserDtos;
         }
 
-      
+        public async Task<ReadUserDto> GetUserByEmailAsync(string email)
+        {
+            var user = await _userRepository.GetUserByEmailAsync(email);
+            var readUserDto = _mapper.Map<ReadUserDto>(user);
+            return readUserDto;
+        }
+
         public async Task<ReadUserDto> GetUserByIdAsync(Guid userId)
         {
             var user = await _userRepository.GetByIdAsync(userId);
             var readUserDto = _mapper.Map<ReadUserDto>(user);
             return readUserDto;
         }
-
-
 
         public async Task<ReadUserDto> UpdateUserAsync(Guid userId, UpdateUserDto updateUserDto)
         {

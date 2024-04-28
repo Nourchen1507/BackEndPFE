@@ -27,13 +27,13 @@ builder.Services.AddDbContext<ApplicationDbContext>((serviceProvider, options) =
         sqlServerOptions.EnableRetryOnFailure();
 
     });
-  
+
     options.AddInterceptors(new TimeStampInterceptor());
 
-   // options.UseModelBuilder(modelBuilder =>
+    // options.UseModelBuilder(modelBuilder =>
     ///{
     //    modelBuilder.ConfigureEnumConversions();
-   // });
+    // });
 });
 
 
@@ -135,4 +135,3 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
-

@@ -8,17 +8,16 @@ namespace App.UI.Web.Authentification.OptionsSetup
     public  static class JwtConfiguration
     {
         public static void ConfigureJwt(IServiceCollection services, IConfiguration configuration)
-
         {
             var jwtOptions = configuration.GetSection("JwtOptions").Get<JwtOptions>();
-             
-            services.Configure<JwtOptions>(options => {
 
-
+            services.Configure<JwtOptions>(options =>
+            {
                 options.Issuer = jwtOptions.Issuer;
                 options.Audience = jwtOptions.Audience;
-               // options.SecretKey = jwtOptions.SecretKey;   
+                options.SecretKey = jwtOptions.SecretKey;
             });
+
             services.AddSingleton<IConfigureOptions<JwtBearerOptions>, JwtBearerOptionsSetup>();
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
@@ -31,8 +30,8 @@ namespace App.UI.Web.Authentification.OptionsSetup
                         ValidateIssuerSigningKey = true,
                         ValidIssuer = jwtOptions.Issuer,
                         ValidAudience = jwtOptions.Audience,
-                        //IssuerSigningKey = new SymmetricSecurityKey(
-                            //Encoding.UTF8.GetBytes(jwtOptions.SecretKey))
+                        IssuerSigningKey = new SymmetricSecurityKey(
+                            Encoding.UTF8.GetBytes(jwtOptions.SecretKey))
                     };
                 });
         }

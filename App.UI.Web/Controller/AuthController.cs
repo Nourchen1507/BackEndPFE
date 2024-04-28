@@ -1,11 +1,14 @@
 ﻿using App.ApplicationCore.Domain.Dtos.UserDtos;
 using App.ApplicationCore.Domain.Entities;
 using App.ApplicationCore.Interfaces;
-using App.ApplicationCore.Services;
+using App.UI.Web.Authentification;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http.HttpResults;
+
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 
 namespace App.UI.Web.Controller
 {
@@ -13,10 +16,9 @@ namespace App.UI.Web.Controller
     [Route("api/[controller]")]
     public class AuthController : ControllerBase
     {
-
+      
         private readonly IAuthService _authService;
         private readonly IUserService _userService;
-
 
         public AuthController(IAuthService authService, IUserService userService)
         {
@@ -25,22 +27,17 @@ namespace App.UI.Web.Controller
         }
 
         [HttpPost("login")]
-
         public async Task<ActionResult<string>> AuthenticateUserAsync([FromBody] UserCredentialsDto userCredentials)
         {
             return Ok(await _authService.AutheticateUser(userCredentials));
         }
 
-
         [HttpPost("token")]
         [Authorize]
-
         public async Task<ActionResult<string>> RefreshTokenAsync([FromBody] string token)
         {
             return Ok(await _authService.RefreshToken(token));
         }
-
-
 
         [HttpGet("profile")]
         [Authorize]
@@ -61,6 +58,5 @@ namespace App.UI.Web.Controller
             return Ok(user);
         }
     }
-
-
 }
+

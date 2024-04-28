@@ -10,11 +10,10 @@ namespace App.ApplicationCore.Services
 {
   public class AuthService : IAuthService
     {
-
         private readonly IUserRepository _userRepository;
-
         private readonly IJwtManager _jwtManager;
-            public AuthService(IUserRepository userRepository, IJwtManager jwtManager)
+
+        public AuthService(IUserRepository userRepository, IJwtManager jwtManager)
         {
             _userRepository = userRepository;
             _jwtManager = jwtManager;
@@ -23,7 +22,7 @@ namespace App.ApplicationCore.Services
         public async Task<string> AutheticateUser(UserCredentialsDto userCredentials)
         {
             var user = await _userRepository.GetUserByEmailAsync(userCredentials.Email)
-                 ?? throw new ArgumentException("Invalid login credentials.");
+                ?? throw new ArgumentException("Invalid login credentials.");
             var isAuthenticated = PasswordService.VerifyPassword(user.PasswordHash, userCredentials.Password);
             if (!isAuthenticated)
             {

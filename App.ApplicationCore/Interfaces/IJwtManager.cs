@@ -14,5 +14,6 @@ namespace App.ApplicationCore.Interfaces
         public string GenerateAccessToken(User user);
 
         Task<string> RefreshAccessToken(string refreshToken);   
+
     }
 }

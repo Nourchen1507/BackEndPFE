@@ -12,7 +12,7 @@ namespace App.ApplicationCore.Domain.Entities
     public  enum UserRole
     {
 
-         Client,
+        Customer,
         Admin
     }
 }

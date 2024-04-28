@@ -21,8 +21,8 @@ namespace App.ApplicationCore.Domain.Entities
         [Required]
         public string Phone { get; set; }
         [Required]
-        public string PasswordHash { get; set; }
 
+        public required string PasswordHash { get; set; }
 
         public UserRole Role { get; set; }
         public List<Order>? Orders { get; set; }
