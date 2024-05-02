@@ -45,6 +45,11 @@ namespace App.Infrastructure.Repositories
             await _applicationDbContext.SaveChangesAsync();
             return user;
         }
-    }
 
+        public async Task<User> GetUserByCIN(string cin)
+        {
+            return await _applicationDbContext.Users.FirstOrDefaultAsync(u => u.CIN == cin);
+        }
+
+    }
 }

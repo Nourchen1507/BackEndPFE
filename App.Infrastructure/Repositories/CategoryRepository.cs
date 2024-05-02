@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+
 namespace App.Infrastructure.Repositories
 {
     public class CategoryRepository : GenericRepository<Category>, ICategoryRepository

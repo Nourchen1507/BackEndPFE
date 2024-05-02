@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace App.ApplicationCore.Domain.Dtos.UserDtos
 {
-  public  class UpdateUserDto
+      public  class UpdateUserDto
     {
 
 

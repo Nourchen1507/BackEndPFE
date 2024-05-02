@@ -9,6 +9,7 @@ using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace App.Infrastructure.Persistance
@@ -33,30 +34,35 @@ namespace App.Infrastructure.Persistance
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-           
+
         }
 
-       
-    
 
-    public DbSet<User> Users { get; set; }
+
+
+        public DbSet<User> Users { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Order> Orders { get; set; }
+        public DbSet<Facture> Factures { get; set; }
+        public DbSet<SoldeCarte > SoldeCarte { get; set; }
+        public DbSet<Transaction> Transaction { get; set; }
 
-       
+
+
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
 
 
-            
+
 
 
             modelBuilder.Entity<User>(entity =>
             {
 
-               
+
 
 
                 entity.HasKey(u => u.Id);
@@ -99,11 +105,17 @@ namespace App.Infrastructure.Persistance
                     .WithMany()
                     .HasForeignKey(orderItem => orderItem.ProductId);
             });
+
+
+
+            modelBuilder.Entity<Facture>(entity =>
+                {
+                    entity.HasKey(e => e.Id);
+                    entity.HasOne(e => e.Order) // Définition de la relation avec la commande
+                        .WithMany() // Il est probable que vous ayez une relation "Many-to-One" ici
+                        .HasForeignKey(e => e.OrderId)
+                        .OnDelete(DeleteBehavior.Cascade); // Assurez-vous de spécifier le comportement de suppression approprié
+                });
         }
-
-
-
     }
-        
-
-    }
+}

@@ -4,6 +4,7 @@ using App.Infrastructure.Persistance;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace App.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240501004451_Facture")]
+    partial class Facture
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -62,6 +65,12 @@ namespace App.Infrastructure.Migrations
                     b.Property<decimal>("Montant")
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<decimal>("MontantHT")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("MontantTTC")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<Guid>("OrderId")
                         .HasColumnType("uniqueidentifier");
 
@@ -73,12 +82,6 @@ namespace App.Infrastructure.Migrations
 
                     b.Property<string>("PayStatus")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal>("SoldeApres")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("SoldeAvant")
-                        .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
 
@@ -185,48 +188,6 @@ namespace App.Infrastructure.Migrations
                     b.ToTable("Products");
                 });
 
-            modelBuilder.Entity("App.ApplicationCore.Domain.Entities.SoldeCarte", b =>
-                {
-                    b.Property<string>("CIN")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<decimal>("SoldeDisponible")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.HasKey("CIN");
-
-                    b.ToTable("SoldeCarte");
-                });
-
-            modelBuilder.Entity("App.ApplicationCore.Domain.Entities.Transaction", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("CIN")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("DateTransaction")
-                        .HasColumnType("datetime2");
-
-                    b.Property<decimal>("Montant")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("NumCommande")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal>("SoldeApres")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("SoldeAvant")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Transaction");
-                });
-
             modelBuilder.Entity("App.ApplicationCore.Domain.Entities.User", b =>
                 {
                     b.Property<Guid>("Id")
@@ -234,10 +195,6 @@ namespace App.Infrastructure.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Addresse")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("CIN")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 

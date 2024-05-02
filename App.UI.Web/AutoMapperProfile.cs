@@ -1,4 +1,5 @@
-﻿using App.ApplicationCore.Domain.Dtos.Category;
+﻿using App.ApplicationCore.Domain.Dtos;
+using App.ApplicationCore.Domain.Dtos.Category;
 using App.ApplicationCore.Domain.Dtos.Order;
 using App.ApplicationCore.Domain.Dtos.Product;
 using App.ApplicationCore.Domain.Dtos.UserDtos;
@@ -48,6 +49,9 @@ namespace App.UI.Web
 
             CreateMap<OrderItemDto, Order>();
             CreateMap<Order, OrderItemDto>();
+            CreateMap<Transaction, TransactionDto>();
+            CreateMap<SoldeCarte, SoldeCarteDto>();
+            CreateMap<UserSoldeDto, UserSoldeDto>();
 
 
         }

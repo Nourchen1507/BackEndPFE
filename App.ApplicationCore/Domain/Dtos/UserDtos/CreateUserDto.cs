@@ -21,5 +21,9 @@ namespace App.ApplicationCore.Domain.Dtos.UserDtos
        
         public string Phone { get; set; }
 
+
+        public string CIN { get; set; }
+        
+       
     }
 }

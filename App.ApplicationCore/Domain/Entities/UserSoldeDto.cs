@@ -7,10 +7,19 @@ using System.Threading.Tasks;
 
 namespace App.ApplicationCore.Domain.Entities
 {
-    public class User : BaseEntity 
+    public class UserSoldeDto
     {
 
-        [Required]
+
+        public Decimal Montant { get; set; }
+        public string CIN { get; set; }
+
+        public Decimal SoldeAvant { get; set; }
+        public Decimal SoldeApres { get; set; }
+
+        public string NumCommande { get; set; }
+        public DateTime DateTransaction { get; set; }
+
         public string FirstName { get; set; }
         [Required]
         public string LastName { get; set; }
@@ -20,12 +29,5 @@ namespace App.ApplicationCore.Domain.Entities
         public string Addresse { get; set; }
         [Required]
         public string Phone { get; set; }
-
-        [Required]
-        public string CIN { get; set; }
-        public required string PasswordHash { get; set; }
-
-        public UserRole Role { get; set; }
-        public List<Order>? Orders { get; set; }
     }
 }

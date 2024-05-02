@@ -14,5 +14,8 @@ namespace App.ApplicationCore.Domain.Dtos.UserDtos
         public required string LastName { get; set; }
         public required string Email { get; set; }
         public required string Role { get; set; }
+
+        public string CIN { get; set; }
     }
+  
 }
