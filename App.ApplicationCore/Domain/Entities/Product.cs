@@ -23,5 +23,6 @@ namespace App.ApplicationCore.Domain.Entities
         public int Inventory {  get; set; }
 
         public string ImageUrl { get; set; }
+       
     }
 }

@@ -1,9 +1,12 @@
 ﻿using App.ApplicationCore.Common;
 using App.ApplicationCore.Domain.Dtos.UserDtos;
+using App.ApplicationCore.Domain.Entities;
 using App.ApplicationCore.Interfaces;
+using App.Infrastructure.Persistance;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 
 namespace App.UI.Web.Controller
@@ -16,35 +19,34 @@ namespace App.UI.Web.Controller
     {
         private readonly IUserService _userService;
         private readonly IMapper _mapper;
-
-        public UsersController(IUserService userService, IMapper mapper)
+        private readonly ApplicationDbContext _applicationDbContext;
+        public UsersController(IUserService userService, IMapper mapper , ApplicationDbContext applicationDbContext)
         {
             _userService = userService;
+            _applicationDbContext = applicationDbContext;
             _mapper = mapper;
         }
 
         [HttpGet]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public async Task<ActionResult<IEnumerable<ReadUserDto>>> GetAllUsersAsync()
         {
-            var users = await _userService.GetAllUsersAsync();
+            var users = await _applicationDbContext.Users.ToListAsync();
             return Ok(users);
         }
 
         [HttpPost]
-        public async Task<ActionResult<ReadUserDto>> CreateUserAsync([FromBody] CreateUserDto createUserDto)
+        public async Task<ActionResult<ReadUserDto>> CreateUserAsync([FromBody] User createUserDto)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-            var user = await _userService.CreateUserAsync(createUserDto);
-            return Ok(user);
+            createUserDto.Id= Guid.NewGuid();
+            await _applicationDbContext.Users.AddAsync(createUserDto);
+            await _applicationDbContext.SaveChangesAsync();
+            return Ok(createUserDto);
         }
 
 
         [HttpGet("{id:Guid}")]
-        [Authorize]
+        //[Authorize]
         public async Task<ActionResult<ReadUserDto>> GetUserByIdAsync(Guid id)
         {
             var requestingUserId = User.FindFirst(ClaimTypes.NameIdentifier);
@@ -79,7 +81,7 @@ namespace App.UI.Web.Controller
 
 
         [HttpPut("{id:Guid}")]
-        [Authorize]
+        //[Authorize]
         public async Task<ActionResult<ReadUserDto>> UpdateUserAsync(Guid id, [FromBody] UpdateUserDto userDto)
         {
             var requestUserIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);

@@ -1,6 +1,7 @@
 ﻿using App.ApplicationCore.Domain.Dtos.UserDtos;
 using App.ApplicationCore.Domain.Entities;
 using App.ApplicationCore.Interfaces;
+using App.Infrastructure.Persistance;
 using App.UI.Web.Authentification;
 using Microsoft.AspNetCore.Authorization;
 
@@ -19,11 +20,14 @@ namespace App.UI.Web.Controller
       
         private readonly IAuthService _authService;
         private readonly IUserService _userService;
+        private readonly ApplicationDbContext _applicationDbContext;
 
-        public AuthController(IAuthService authService, IUserService userService)
+        public AuthController(IAuthService authService, IUserService userService, ApplicationDbContext applicationDbContext)
         {
             _authService = authService;
             _userService = userService;
+            _applicationDbContext = applicationDbContext;
+      
         }
 
         [HttpPost("login")]

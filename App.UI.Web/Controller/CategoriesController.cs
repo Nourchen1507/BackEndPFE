@@ -2,6 +2,7 @@
 using App.ApplicationCore.Domain.Dtos.Category;
 using App.ApplicationCore.Domain.Dtos.Product;
 using App.ApplicationCore.Interfaces;
+using App.Infrastructure.Persistance;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,10 +16,13 @@ namespace App.UI.Web.Controller
 
 
         private readonly ICategoryService _categoryService;
+        private readonly IProductService _productService;
+        private readonly ApplicationDbContext _applicationDbContext;
 
-        public CategoriesController(ICategoryService categoryService)
+        public CategoriesController(ICategoryService categoryService, ApplicationDbContext applicationDbContext)
         {
             _categoryService = categoryService;
+            _applicationDbContext = applicationDbContext;
         }
 
         [HttpGet]
@@ -29,7 +33,7 @@ namespace App.UI.Web.Controller
         }
 
         [HttpPost]
-        [Authorize(Roles = "Admin")]
+       // [Authorize(Roles = "Admin")]
         public async Task<ActionResult<ReadCategoryDto>> CreateCategoryAsync([FromBody] CreateCategoryDto categoryDto)
         {
             var category = await _categoryService.CreateCategoryAsync(categoryDto);

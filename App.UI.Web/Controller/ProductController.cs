@@ -1,8 +1,10 @@
 ﻿using App.ApplicationCore.Common;
 using App.ApplicationCore.Domain.Dtos.Product;
 using App.ApplicationCore.Interfaces;
+using App.Infrastructure.Persistance;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace App.UI.Web.Controller
 {
@@ -13,12 +15,15 @@ namespace App.UI.Web.Controller
     {
 
         private readonly IProductService _productService;
+        private readonly ApplicationDbContext _applicationDbContext;
 
-           public ProductController (IProductService productService)
+
+        public ProductController (IProductService productService, ApplicationDbContext applicationDbContext)
            {
 
             _productService = productService;
-           }
+            _applicationDbContext = applicationDbContext;
+        }
 
 
 
@@ -26,7 +31,7 @@ namespace App.UI.Web.Controller
         [HttpGet]
         public async Task<ActionResult<ReadProductDto>> GetAllProductsAsync([FromQuery] QueryOptions queryOptions)
         {
-            var products = await _productService.GetAllProductsAsync(queryOptions);
+            var products = await _applicationDbContext.Products.ToListAsync();
             return Ok(products);
         }
 

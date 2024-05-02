@@ -4,6 +4,7 @@ using App.Infrastructure.Persistance;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace App.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240502183910_carte")]
+    partial class carte
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -65,6 +68,9 @@ namespace App.Infrastructure.Migrations
                     b.Property<Guid>("OrderId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid?>("OrderId1")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("PayGateway")
                         .HasColumnType("nvarchar(max)");
 
@@ -83,6 +89,8 @@ namespace App.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("OrderId");
+
+                    b.HasIndex("OrderId1");
 
                     b.ToTable("Factures");
                 });
@@ -175,12 +183,6 @@ namespace App.Infrastructure.Migrations
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int>("ProductBrandId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ProductTypeId")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
 
@@ -188,43 +190,7 @@ namespace App.Infrastructure.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.HasIndex("ProductBrandId");
-
-                    b.HasIndex("ProductTypeId");
-
                     b.ToTable("Products");
-                });
-
-            modelBuilder.Entity("App.ApplicationCore.Domain.Entities.ProductBrand", b =>
-                {
-                    b.Property<int>("ProductBrandId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ProductBrandId"));
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("ProductBrandId");
-
-                    b.ToTable("ProductBrand");
-                });
-
-            modelBuilder.Entity("App.ApplicationCore.Domain.Entities.ProductType", b =>
-                {
-                    b.Property<int>("ProductTypeId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ProductTypeId"));
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("ProductTypeId");
-
-                    b.ToTable("ProductType");
                 });
 
             modelBuilder.Entity("App.ApplicationCore.Domain.Entities.SoldeCarte", b =>
@@ -235,7 +201,12 @@ namespace App.Infrastructure.Migrations
                     b.Property<decimal>("SoldeDisponible")
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("CIN");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("SoldeCarte");
                 });
@@ -335,6 +306,10 @@ namespace App.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("App.ApplicationCore.Domain.Entities.Order", null)
+                        .WithMany("Factures")
+                        .HasForeignKey("OrderId1");
+
                     b.Navigation("Order");
                 });
 
@@ -374,23 +349,18 @@ namespace App.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("App.ApplicationCore.Domain.Entities.ProductBrand", "ProductBrand")
-                        .WithMany()
-                        .HasForeignKey("ProductBrandId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("App.ApplicationCore.Domain.Entities.ProductType", "ProductType")
-                        .WithMany()
-                        .HasForeignKey("ProductTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Category");
+                });
 
-                    b.Navigation("ProductBrand");
+            modelBuilder.Entity("App.ApplicationCore.Domain.Entities.SoldeCarte", b =>
+                {
+                    b.HasOne("App.ApplicationCore.Domain.Entities.User", "User")
+                        .WithMany("SoldeCartes")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.Navigation("ProductType");
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("App.ApplicationCore.Domain.Entities.Category", b =>
@@ -400,12 +370,16 @@ namespace App.Infrastructure.Migrations
 
             modelBuilder.Entity("App.ApplicationCore.Domain.Entities.Order", b =>
                 {
+                    b.Navigation("Factures");
+
                     b.Navigation("OrderItems");
                 });
 
             modelBuilder.Entity("App.ApplicationCore.Domain.Entities.User", b =>
                 {
                     b.Navigation("Orders");
+
+                    b.Navigation("SoldeCartes");
                 });
 #pragma warning restore 612, 618
         }
