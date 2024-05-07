@@ -27,7 +27,7 @@ namespace App.UI.Web.Controller
         //[Authorize(Roles = "Admin")]
         public async Task<ActionResult<ReadOrderDto>> GetAllOrdersAsync()
         {
-            var orders = await _applicationDbContext.Orders.ToListAsync();
+            var orders = await _applicationDbContext.Order.ToListAsync();
             return Ok(orders);
         }
 

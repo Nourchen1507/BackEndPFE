@@ -1,6 +1,8 @@
 ﻿using App.ApplicationCore.Common;
 using App.ApplicationCore.Domain.Dtos.Category;
+using App.ApplicationCore.Domain.Dtos.Order;
 using App.ApplicationCore.Domain.Dtos.Product;
+using App.ApplicationCore.Domain.Dtos.UserDtos;
 using App.ApplicationCore.Domain.Entities;
 using App.ApplicationCore.Interfaces;
 using AutoMapper;
@@ -18,16 +20,68 @@ namespace App.ApplicationCore.Services
         private readonly IMapper _mapper;
         private readonly ISanitizerService _sanitizerService;
         private readonly ICategoryRepository _categoryRepository;
+        private readonly ICategoryService _categoryService;
 
 
-        public ProductService(IProductRepository productRepository, IMapper mapper, ISanitizerService sanitizerService, ICategoryRepository categoryRepository)
+        public ProductService(IProductRepository productRepository, ICategoryService categoryService ,IMapper mapper, ISanitizerService sanitizerService, ICategoryRepository categoryRepository)
         {
             _productRepository = productRepository;
             _mapper = mapper;
             _sanitizerService = sanitizerService;
             _categoryRepository = categoryRepository;
+            _categoryService = categoryService;
         }
-    
+
+
+        //public async Task<ReadProductDto> CreateProductAsync(CreateProductDto createProductDto)
+        //{
+        //    try
+        //    {
+        //        var sanitizedDto = _sanitizerService.SanitizeDto(createProductDto);
+        //        if (sanitizedDto == null)
+        //        {
+        //            throw new ArgumentNullException(nameof(createProductDto));
+        //        }
+
+        //        var productDtoProperties = typeof(CreateProductDto).GetProperties();
+        //        foreach (var property in productDtoProperties)
+        //        {
+        //            var dtoValue = property.GetValue(sanitizedDto);
+        //            if (property.Name.ToLower() == "imageurl")
+        //            {
+        //                Console.WriteLine($"{property.Name} : value is {dtoValue}");
+        //            }
+        //            if (dtoValue is null or (object)"")
+        //            {
+        //                throw new ArgumentException($"{property.Name} is required.");
+        //            }
+        //        }
+
+        //        var category = await _categoryRepository.GetByNameAsync(sanitizedDto.CategoryName);
+        //        if (category == null)
+        //        {
+        //            throw new ArgumentException($"Category with Name {sanitizedDto.CategoryName} not found.");
+        //        }
+        //        var newProduct = _mapper.Map<Product>(sanitizedDto);
+        //        newProduct = await _productRepository.AddAsync(newProduct);
+
+        //        //var category = await _categoryRepository.GetByIdAsync(newProduct.CategoryId);
+        //        var readProductDto = _mapper.Map<ReadProductDto>(newProduct);
+        //        readProductDto.Category = _mapper.Map<ReadCategoryDto>(category);
+        //        return readProductDto;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Console.WriteLine("Mapping error: " + ex.Message);
+
+        //        if (ex.InnerException != null)
+        //        {
+        //            Console.WriteLine("Inner exception: " + ex.InnerException.Message);
+        //        }
+        //        throw;
+        //    }
+
+        //}
 
         public async Task<ReadProductDto> CreateProductAsync(CreateProductDto createProductDto)
         {
@@ -53,15 +107,17 @@ namespace App.ApplicationCore.Services
                     }
                 }
 
-                var category = await _categoryRepository.GetByIdAsync(sanitizedDto.CategoryId);
+                var category = await _categoryRepository.GetByNameAsync(sanitizedDto.CategoryName);
                 if (category == null)
                 {
-                    throw new ArgumentException($"Category with ID {sanitizedDto.CategoryId} not found.");
+                    throw new ArgumentException($"Category with Name {sanitizedDto.CategoryName} not found.");
                 }
+
                 var newProduct = _mapper.Map<Product>(sanitizedDto);
+                newProduct.CategoryId = category.Id; // Utilisation de l'ID de la catégorie trouvée
+
                 newProduct = await _productRepository.AddAsync(newProduct);
 
-                //var category = await _categoryRepository.GetByIdAsync(newProduct.CategoryId);
                 var readProductDto = _mapper.Map<ReadProductDto>(newProduct);
                 readProductDto.Category = _mapper.Map<ReadCategoryDto>(category);
                 return readProductDto;
@@ -76,8 +132,8 @@ namespace App.ApplicationCore.Services
                 }
                 throw;
             }
-
         }
+
 
 
         public async Task<bool> DeleteProductByIdAsync(Guid productId)
@@ -102,6 +158,23 @@ namespace App.ApplicationCore.Services
             return readProductDtos;
         }
 
+        public async Task<IEnumerable<ReadProductDto>> GetProductByCategoryIdAsync(Guid categoryId)
+        {
+            Console.WriteLine("Category ID received in service layer.");
+            var category = await _categoryService.GetCategoryByIdAsync(categoryId);
+
+            if (category == null)
+            {
+                throw new ArgumentException($"Category with ID {categoryId} not found.");
+            }
+
+            var productsInCategory = await _productRepository.GetProductsByCategoryIdAsync(categoryId);
+            var readProductDtos = _mapper.Map<IEnumerable<ReadProductDto>>(productsInCategory);
+
+            return readProductDtos;
+        }
+
+
         public async Task<ReadProductDto> GetProductByIdAsync(Guid productId)
         {
             var product = await _productRepository.GetByIdAsync(productId)
@@ -111,6 +184,28 @@ namespace App.ApplicationCore.Services
             readProductDto.Category = _mapper.Map<ReadCategoryDto>(category);
             return readProductDto;
         }
+
+        public async Task<IEnumerable<Product>> GetProductsByCategoryIdAsync(Guid categoryId)
+        {
+            return await _productRepository.GetProductsByCategoryIdAsync(categoryId);
+        }
+
+        public async Task<IEnumerable<Product>> GetProductsByCategoryNameAsync(string name)
+        {
+            // Récupérer la catégorie par son nom
+            var category = await _categoryRepository.GetByNameAsync(name);
+
+            if (category == null)
+            {
+                throw new ArgumentException($"Category with name {name} not found.");
+            }
+
+            // Récupérer les produits de cette catégorie
+            var productsInCategory = await _productRepository.GetProductsByCategoryIdAsync(category.Id);
+
+            return productsInCategory;
+        }
+
 
         public async Task<ReadProductDto> UpdateProductAsync(Guid productId, UpdateProductDto updateProductDto)
         {
@@ -154,5 +249,7 @@ namespace App.ApplicationCore.Services
                 throw;
             }
         }
+
     }
+
 }

@@ -48,7 +48,7 @@ namespace App.Infrastructure.Repositories
 
         public async Task<User> GetUserByCIN(string cin)
         {
-            return await _applicationDbContext.Users.FirstOrDefaultAsync(u => u.CIN == cin);
+            return await _applicationDbContext.User.FirstOrDefaultAsync(u => u.CIN == cin);
         }
 
     }

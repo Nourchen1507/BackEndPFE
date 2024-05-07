@@ -19,6 +19,22 @@ namespace App.Infrastructure.Repositories
             _applicationDbContext = applicationDbContext;
             _products = _applicationDbContext.Set<Product>();
         }
+
+
+
+        public async Task<IEnumerable<Product>> GetProductsByCategoryIdAsync(Guid categoryId)
+        {
+            return await _applicationDbContext.Product
+                .Where(p => p.CategoryId == categoryId)
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<Product>> GetProductsByCategoryNameAsync(string categoryName)
+        {
+            return await _applicationDbContext.Product
+                .Where(p => p.CategoryName == categoryName)
+                .ToListAsync();
+        }
     }
 }
 

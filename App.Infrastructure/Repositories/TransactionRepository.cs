@@ -88,7 +88,8 @@ namespace App.Infrastructure.Repositories
                         FirstName = user.FirstName,
                         LastName = user.LastName,
                         Phone = user.Phone,
-                        Addresse = user.Addresse,
+                        Addresse = user.Localisation,
+                     
                         SoldeApres = soldeCarte.SoldeDisponible
                     };
 

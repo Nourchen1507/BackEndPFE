@@ -1,4 +1,5 @@
-﻿using App.ApplicationCore.Domain.Dtos.UserDtos;
+﻿using App.ApplicationCore.Domain.Dtos;
+using App.ApplicationCore.Domain.Dtos.UserDtos;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,7 @@ namespace App.ApplicationCore.Interfaces
 {
     public interface IAuthService
     {
-        Task<string> AutheticateUser( UserCredentialsDto userCredentials);
+        Task<ResponseLoginDto> AuthenticateUser(UserCredentialsDto userCredentials);
         Task<string> RefreshToken(string refreshToken);
     }
 }

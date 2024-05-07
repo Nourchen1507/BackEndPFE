@@ -5,6 +5,7 @@ using App.ApplicationCore.Interfaces;
 using App.Infrastructure.Persistance;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace App.UI.Web.Controller
 {
@@ -26,9 +27,9 @@ namespace App.UI.Web.Controller
         }
 
         [HttpGet]
-        public async Task<ActionResult<ReadCategoryDto>> GetAllCategoriesAsync([FromQuery] QueryOptions queryOptions)
+        public async Task<ActionResult<ReadCategoryDto>> GetAllCategoriesAsync()
         {
-            var categories = await _categoryService.GetAllCategoriesAsync(queryOptions);
+            var categories = await _applicationDbContext.Category.ToListAsync();
             return Ok(categories);
         }
 
@@ -40,12 +41,14 @@ namespace App.UI.Web.Controller
             return Ok(category);
         }
 
-        [HttpGet("{id:Guid}")]
+
+
+        [HttpGet("{categoryId:Guid}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<ReadCategoryDto>> GetCategoryByIdAsync(Guid id)
+        public async Task<ActionResult<ReadCategoryDto>> GetCategoryByIdAsync(Guid categoryId)
         {
-            var category = await _categoryService.GetCategoryByIdAsync(id);
+            var category = await _categoryService.GetCategoryByIdAsync(categoryId);
             if (category == null)
             {
                 return NotFound();
@@ -54,7 +57,7 @@ namespace App.UI.Web.Controller
         }
 
         [HttpPut("{id:Guid}")]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public async Task<ActionResult<ReadCategoryDto>> UpdateCategoryAsync(Guid id, [FromBody] UpdateCategoryDto categoryDto)
         {
             var category = await _categoryService.UpdateCategoryAsync(id, categoryDto);
@@ -62,7 +65,7 @@ namespace App.UI.Web.Controller
         }
 
         [HttpDelete("{id:Guid}")]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public async Task<ActionResult<bool>> DeleteCategoryAsync(Guid id)
         {
             var result = await _categoryService.DeleteCategoryAsync(id);

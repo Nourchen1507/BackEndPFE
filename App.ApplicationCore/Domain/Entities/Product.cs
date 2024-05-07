@@ -16,8 +16,9 @@ namespace App.ApplicationCore.Domain.Entities
         public string Description { get; set; }
 
         public Decimal Price { get; set; }
-        public Guid CategoryId { get; set; }
 
+        public Guid CategoryId { get; set; }
+        public string CategoryName { get; set; }
         public virtual Category Category { get; set; }
 
         public int Inventory {  get; set; }

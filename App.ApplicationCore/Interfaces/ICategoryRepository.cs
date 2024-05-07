@@ -10,6 +10,7 @@ namespace App.ApplicationCore.Interfaces
     public interface ICategoryRepository : IGenericRepository<Category>
     {
         Task<Category> GetCategoryByNameAsync(string categoryName);
+        Task<Category> GetByNameAsync(string categoryName);
         Task<IEnumerable<Product>> GetAllProductsInCategoryAsync(Guid id);
     }
 }

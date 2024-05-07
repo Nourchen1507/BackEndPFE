@@ -1,4 +1,5 @@
 ﻿using App.ApplicationCore.Domain.Dtos;
+using App.ApplicationCore.Domain.Dtos.Adresses;
 using App.ApplicationCore.Domain.Dtos.Category;
 using App.ApplicationCore.Domain.Dtos.Order;
 using App.ApplicationCore.Domain.Dtos.Product;
@@ -52,6 +53,15 @@ namespace App.UI.Web
             CreateMap<Transaction, TransactionDto>();
             CreateMap<SoldeCarte, SoldeCarteDto>();
             CreateMap<UserSoldeDto, UserSoldeDto>();
+
+            CreateMap<CreateAdresseDto, Adresse>();
+            CreateMap<Adresse, CreateAdresseDto>();
+        
+            CreateMap<Adresse, UpdateAdresseDto>();
+            CreateMap<Adresse, ReadAdresseDto>();
+            CreateMap<CreateAdresseDto, Adresse>();
+            CreateMap<UpdateAdresseDto, Adresse>();
+            CreateMap<ReadAdresseDto, Adresse>();
 
 
         }

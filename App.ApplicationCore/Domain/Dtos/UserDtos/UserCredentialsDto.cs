@@ -14,5 +14,6 @@ namespace App.ApplicationCore.Domain.Dtos.UserDtos
         public string Password { get; set; }
 
 
+
     }
 }

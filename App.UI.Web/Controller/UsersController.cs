@@ -2,6 +2,7 @@
 using App.ApplicationCore.Domain.Dtos.UserDtos;
 using App.ApplicationCore.Domain.Entities;
 using App.ApplicationCore.Interfaces;
+
 using App.Infrastructure.Persistance;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
@@ -31,41 +32,37 @@ namespace App.UI.Web.Controller
         //[Authorize(Roles = "Admin")]
         public async Task<ActionResult<IEnumerable<ReadUserDto>>> GetAllUsersAsync()
         {
-            var users = await _applicationDbContext.Users.ToListAsync();
+            var users = await _applicationDbContext.User.ToListAsync();
             return Ok(users);
         }
 
         [HttpPost]
-        public async Task<ActionResult<ReadUserDto>> CreateUserAsync([FromBody] User createUserDto)
+        public async Task<ActionResult<ReadUserDto>> CreateUserAsync([FromBody] CreateUserDto createUserDto)
         {
-            createUserDto.Id= Guid.NewGuid();
-            await _applicationDbContext.Users.AddAsync(createUserDto);
-            await _applicationDbContext.SaveChangesAsync();
-            return Ok(createUserDto);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var user = await _userService.CreateUserAsync(createUserDto);
+            return Ok(user);
         }
-
 
         [HttpGet("{id:Guid}")]
         //[Authorize]
         public async Task<ActionResult<ReadUserDto>> GetUserByIdAsync(Guid id)
         {
-            var requestingUserId = User.FindFirst(ClaimTypes.NameIdentifier);
+            var user =
+                await _applicationDbContext.User
+                .FirstOrDefaultAsync(x => x.Id == id);
 
-            if (requestingUserId == null || !Guid.TryParse(requestingUserId.Value, out var requestUserId))
+            if (
+                
+                user == null)
             {
-                return Forbid();
-            }
 
-            if (requestUserId == id)
-            {
-                var user = await _userService.GetUserByIdAsync(id);
-                if (user == null)
-                {
-                    return NotFound();
-                }
-                return Ok(user);
+                return NotFound();
             }
-            return Forbid();
+            return Ok(user);
         }
 
 

@@ -10,6 +10,11 @@ using App.Infrastructure.Repositories;
 using App.ApplicationCore.Services;
 using App.ApplicationCore.Domain.Entities;
 using Microsoft.Extensions.Options;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using App.ApplicationCore.Domain.Dtos.UserDtos;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -48,6 +53,7 @@ builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 builder.Services.AddScoped<ITransactionRepository, TransactionRepository>();
+builder.Services.AddScoped<IAdresseRepository, AddresseRepository>();
 
 
 
@@ -58,6 +64,7 @@ builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<ITransactionService, TransactionService>();
+builder.Services.AddScoped<IAdresseService, AdresseService>();
 
 
 

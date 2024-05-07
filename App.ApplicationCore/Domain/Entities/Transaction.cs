@@ -11,7 +11,6 @@ namespace App.ApplicationCore.Domain.Entities
 
     {
 
-        [Key]
         public Guid Id { get; set; }
 
         public Decimal Montant { get; set; }
@@ -21,6 +20,8 @@ namespace App.ApplicationCore.Domain.Entities
         public Decimal SoldeApres { get; set; }
         public string NumCommande { get; set; }
         public DateTime DateTransaction { get; set; }
+
+        public DateTime DateTransactionDate { get; set;}
 
 
     }

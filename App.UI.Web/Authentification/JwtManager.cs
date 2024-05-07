@@ -39,9 +39,9 @@ namespace App.UI.Web.Authentification
                 Audience = _options.Audience,
             };
             var token = new JwtSecurityTokenHandler().CreateToken(securityTokenDescriptor);
-            string tokenValue = new JwtSecurityTokenHandler()
-                .WriteToken(token);
-            return tokenValue;
+            var tokenValue = new JwtSecurityTokenHandler();
+               
+            return tokenValue.WriteToken(token);
         }
 
         public async Task<string> RefreshAccessToken(string refreshToken)

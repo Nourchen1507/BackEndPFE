@@ -1,6 +1,7 @@
 ﻿using App.ApplicationCore.Common;
 using App.ApplicationCore.Domain.Dtos.Category;
 using App.ApplicationCore.Domain.Dtos.Product;
+using App.ApplicationCore.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,8 +15,11 @@ namespace App.ApplicationCore.Interfaces
         Task<IEnumerable<ReadCategoryDto>> GetAllCategoriesAsync(QueryOptions queryOptions);
         Task<ReadCategoryDto> CreateCategoryAsync(CreateCategoryDto categoryDto);
         Task<ReadCategoryDto> GetCategoryByIdAsync(Guid categoryId);
+        Task<ReadCategoryDto> GetCategoryByNameAsync(string categoryName);
         Task<ReadCategoryDto> UpdateCategoryAsync(Guid categoryId, UpdateCategoryDto categoryDto);
         Task<bool> DeleteCategoryAsync(Guid categoryId);
         Task<IEnumerable<ReadProductDto>> GetAllProductsInCategoryAsync(Guid categoryId);
+        
+
     }
 }

@@ -40,5 +40,10 @@ namespace App.Infrastructure.Repositories
                             .AsNoTracking()
                             .FirstOrDefaultAsync(c => c.Name.ToLower() == categoryName.ToLower());
         }
+
+        public async Task<Category> GetByNameAsync(string categoryName)
+        {
+            return await _applicationDbContext.Category.FirstOrDefaultAsync(c => c.Name == categoryName);
+        }
     }
 }

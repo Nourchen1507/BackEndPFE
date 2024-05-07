@@ -9,6 +9,12 @@ namespace App.ApplicationCore.Interfaces
 {
     public interface IProductRepository : IGenericRepository<Product>
     {
+        Task<IEnumerable<Product>> GetProductsByCategoryIdAsync(Guid categoryId);
+
+        Task<IEnumerable<Product>> GetProductsByCategoryNameAsync(string category);
+
 
     }
+
+
 }

@@ -1,4 +1,5 @@
-﻿using App.ApplicationCore.Domain.Entities;
+﻿using App.ApplicationCore.Domain.Dtos;
+using App.ApplicationCore.Domain.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -21,7 +22,16 @@ namespace App.Infrastructure.Persistance
 
         private readonly IConfiguration _configuration;
 
-
+        public DbSet<User> User { get; set; }
+        public DbSet<Product> Product { get; set; }
+        public DbSet<Category> Category { get; set; }
+        public DbSet<Order> Order { get; set; }
+   
+        public DbSet<Facture> Facture { get; set; }
+        public DbSet<SoldeCarte> Solde { get; set; }
+        public DbSet<Transaction> Transaction { get; set; }
+        public DbSet<Adresse> Adresse { get; set; }
+    
         public ApplicationDbContext()
         {
 
@@ -37,40 +47,19 @@ namespace App.Infrastructure.Persistance
 
         }
 
-
-
-
-        public DbSet<User> Users { get; set; }
-        public DbSet<Product> Products { get; set; }
-        public DbSet<Category> Categories { get; set; }
-        public DbSet<Order> Orders { get; set; }
-        public DbSet<Facture> Factures { get; set; }
-        public DbSet<SoldeCarte > SoldeCarte { get; set; }
-        public DbSet<Transaction> Transaction { get; set; }
-
-
-
-
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
 
 
-
-
-
             modelBuilder.Entity<User>(entity =>
             {
-
-
-
-
                 entity.HasKey(u => u.Id);
                 entity.HasIndex(u => u.Email).IsUnique();
                 entity.Property(u => u.FirstName).IsRequired();
                 entity.Property(u => u.LastName).IsRequired();
                 entity.Property(u => u.Email).IsRequired();
                 entity.Property(u => u.PasswordHash).IsRequired();
+                entity.Property(u => u.Localisation).IsRequired();
                 // Pour les Enums, utilisez HasConversion pour convertir entre les types Enum C# et les chaînes
                 entity.Property(u => u.Role).HasConversion<string>();
             });
@@ -80,10 +69,16 @@ namespace App.Infrastructure.Persistance
                 entity.HasKey(p => p.Id);
             });
 
+
+            modelBuilder.Entity<Adresse>(entity =>
+            {
+                entity.HasKey(a=> a.Id);
+            });
+ 
             modelBuilder.Entity<Category>(entity =>
             {
                 entity.HasKey(c => c.Id);
-                entity.HasIndex(c => c.Name).IsUnique();
+                //entity.HasIndex(c => c.Name).IsUnique();
                 // entity.Property(c => c.Image).IsRequired();
             });
 
@@ -106,7 +101,7 @@ namespace App.Infrastructure.Persistance
                     .HasForeignKey(orderItem => orderItem.ProductId);
             });
 
-
+   
 
             modelBuilder.Entity<Facture>(entity =>
                 {
@@ -116,6 +111,8 @@ namespace App.Infrastructure.Persistance
                         .HasForeignKey(e => e.OrderId)
                         .OnDelete(DeleteBehavior.Cascade); // Assurez-vous de spécifier le comportement de suppression approprié
                 });
+
+          
         }
     }
 }

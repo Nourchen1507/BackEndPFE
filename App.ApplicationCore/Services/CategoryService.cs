@@ -47,14 +47,6 @@ namespace App.ApplicationCore.Services
                         throw new ArgumentException($"{property.Name} is required.");
                     }
                 }
-
-                // bool isValidUrl = Validator.IsValidURL(sanitzedDto.Image);
-
-                // if (!isValidUrl)
-                // {
-                //     throw new ArgumentException("Invalid image URL.");
-                // }
-
                 var newCategory = _mapper.Map<Category>(sanitzedDto);
                 newCategory = await _categoryRepository.AddAsync(newCategory);
 
@@ -100,6 +92,15 @@ namespace App.ApplicationCore.Services
             return readCategoryDto;
         }
 
+        public async Task<ReadCategoryDto> GetCategoryByNameAsync(string categoryName)
+        {
+            var category = await _categoryRepository.GetByNameAsync(categoryName)
+                ?? throw new ArgumentException($"Category with name {categoryName} not found.");
+
+            var readCategoryDto = _mapper.Map<ReadCategoryDto>(category);
+            return readCategoryDto;
+        }
+
         public async Task<ReadCategoryDto> UpdateCategoryAsync(Guid categoryId, UpdateCategoryDto categoryDto)
         {
             var existingCategory = await _categoryRepository.GetByIdAsync(categoryId)
@@ -122,5 +123,7 @@ namespace App.ApplicationCore.Services
             var readCategoryDto = _mapper.Map<ReadCategoryDto>(existingCategory);
             return readCategoryDto;
         }
+
     }
+
 }

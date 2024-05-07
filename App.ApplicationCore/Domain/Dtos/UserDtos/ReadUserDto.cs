@@ -1,4 +1,6 @@
-﻿using System;
+﻿using App.ApplicationCore.Domain.Dtos.Adresses;
+using App.ApplicationCore.Domain.Dtos.Category;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,7 +16,8 @@ namespace App.ApplicationCore.Domain.Dtos.UserDtos
         public required string LastName { get; set; }
         public required string Email { get; set; }
         public required string Role { get; set; }
-
+        public required string Localisation { get; set; }
+        public ReadAdresseDto Address { get; set; }
         public string CIN { get; set; }
     }
   

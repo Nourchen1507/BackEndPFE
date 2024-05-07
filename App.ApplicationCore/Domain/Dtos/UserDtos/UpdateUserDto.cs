@@ -14,14 +14,16 @@ namespace App.ApplicationCore.Domain.Dtos.UserDtos
         
             public string FirstName { get; set; }
             public string LastName { get; set; }
-           public string Email { get; set; }
-           public string Addresse { get; set; }
-
-          public string Phone { get; set; }
-
-
+            public string Email { get; set; }
+            public Guid AdresseId { get; set; }
+            public string Localisation { get; set; }
+            public string Phone { get; set; }
 
 
 
+
+
+   
+    
     }
 }

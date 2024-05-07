@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace App.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240502003901_DataB")]
-    partial class DataB
+    [Migration("20240507100336_database")]
+    partial class database
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,44 @@ namespace App.Infrastructure.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("App.ApplicationCore.Domain.Entities.Adresse", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("AccessCode")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Floor")
+                        .HasColumnType("int");
+
+                    b.Property<string>("HouseNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("Latitude")
+                        .HasColumnType("float");
+
+                    b.Property<double>("Longitude")
+                        .HasColumnType("float");
+
+                    b.Property<string>("ResidenceName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Adresse");
+                });
 
             modelBuilder.Entity("App.ApplicationCore.Domain.Entities.Category", b =>
                 {
@@ -40,17 +78,14 @@ namespace App.Infrastructure.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Name")
-                        .IsUnique();
-
-                    b.ToTable("Categories");
+                    b.ToTable("Category");
                 });
 
             modelBuilder.Entity("App.ApplicationCore.Domain.Entities.Facture", b =>
@@ -87,7 +122,7 @@ namespace App.Infrastructure.Migrations
 
                     b.HasIndex("OrderId");
 
-                    b.ToTable("Factures");
+                    b.ToTable("Facture");
                 });
 
             modelBuilder.Entity("App.ApplicationCore.Domain.Entities.Order", b =>
@@ -117,9 +152,7 @@ namespace App.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Orders");
+                    b.ToTable("Order");
                 });
 
             modelBuilder.Entity("App.ApplicationCore.Domain.Entities.OrderItem", b =>
@@ -158,6 +191,9 @@ namespace App.Infrastructure.Migrations
                     b.Property<Guid>("CategoryId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("CategoryName")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
@@ -185,7 +221,7 @@ namespace App.Infrastructure.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("Products");
+                    b.ToTable("Product");
                 });
 
             modelBuilder.Entity("App.ApplicationCore.Domain.Entities.SoldeCarte", b =>
@@ -198,7 +234,7 @@ namespace App.Infrastructure.Migrations
 
                     b.HasKey("CIN");
 
-                    b.ToTable("SoldeCarte");
+                    b.ToTable("Solde");
                 });
 
             modelBuilder.Entity("App.ApplicationCore.Domain.Entities.Transaction", b =>
@@ -210,7 +246,13 @@ namespace App.Infrastructure.Migrations
                     b.Property<string>("CIN")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
                     b.Property<DateTime>("DateTransaction")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DateTransactionDate")
                         .HasColumnType("datetime2");
 
                     b.Property<decimal>("Montant")
@@ -225,6 +267,9 @@ namespace App.Infrastructure.Migrations
                     b.Property<decimal>("SoldeAvant")
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
                     b.HasKey("Id");
 
                     b.ToTable("Transaction");
@@ -236,9 +281,8 @@ namespace App.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Addresse")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<Guid>("AdresseId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("CIN")
                         .IsRequired()
@@ -259,12 +303,15 @@ namespace App.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Localisation")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("PasswordHash")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Phone")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Role")
@@ -279,7 +326,7 @@ namespace App.Infrastructure.Migrations
                     b.HasIndex("Email")
                         .IsUnique();
 
-                    b.ToTable("Users");
+                    b.ToTable("User");
                 });
 
             modelBuilder.Entity("App.ApplicationCore.Domain.Entities.Facture", b =>
@@ -291,15 +338,6 @@ namespace App.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("Order");
-                });
-
-            modelBuilder.Entity("App.ApplicationCore.Domain.Entities.Order", b =>
-                {
-                    b.HasOne("App.ApplicationCore.Domain.Entities.User", null)
-                        .WithMany("Orders")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("App.ApplicationCore.Domain.Entities.OrderItem", b =>
@@ -340,11 +378,6 @@ namespace App.Infrastructure.Migrations
             modelBuilder.Entity("App.ApplicationCore.Domain.Entities.Order", b =>
                 {
                     b.Navigation("OrderItems");
-                });
-
-            modelBuilder.Entity("App.ApplicationCore.Domain.Entities.User", b =>
-                {
-                    b.Navigation("Orders");
                 });
 #pragma warning restore 612, 618
         }
