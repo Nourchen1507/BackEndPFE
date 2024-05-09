@@ -13,6 +13,7 @@ namespace App.ApplicationCore.Domain.Dtos.Adresses
         public double Longitude { get; set; }
         public double Latitude { get; set; }
         public string ResidenceName { get; set; }
+        public Guid UserId { get; set; }
         public int Floor { get; set; }
         public string HouseNumber { get; set; }
         public string AccessCode { get; set; }

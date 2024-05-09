@@ -10,7 +10,7 @@ namespace App.ApplicationCore.Domain.Dtos.Adresses
 {
     public class ReadAdresseDto
     {
-        public Guid AdresseId { get; set; }
+        public Guid Id { get; set; }
         public Guid UserId { get; set; }
         public double Longitude { get; set; }
         public double Latitude { get; set; }

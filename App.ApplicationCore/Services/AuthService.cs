@@ -5,6 +5,7 @@ using App.ApplicationCore.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Authentication;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -38,42 +39,42 @@ namespace App.ApplicationCore.Services
         //    return responseLoginDto;
         //}
 
-        public async Task<ResponseLoginDto> AuthenticateUser(UserCredentialsDto userCredentials)
-        {
-            try
-            {
-                var user = await _userRepository.GetUserByEmailAsync(userCredentials.Email);
+        //public async Task<ResponseLoginDto> AuthenticateUser(UserCredentialsDto userCredentials)
+        //{
+        //    try
+        //    {
+        //        var user = await _userRepository.GetUserByEmailAsync(userCredentials.Email);
 
-                if (user == null)
-                {
-                    throw new ArgumentException("Invalid login credentials.");
-                }
+        //        if (user == null)
+        //        {
+        //            throw new ArgumentException("Invalid login credentials.");
+        //        }
 
-                var isAuthenticated = PasswordService.VerifyPassword(user.PasswordHash, userCredentials.Password);
+        //        var isAuthenticated = PasswordService.VerifyPassword(user.PasswordHash, userCredentials.Password);
 
-                if (!isAuthenticated)
-                {
-                    throw new ArgumentException("Invalid login credentials.");
-                }
+        //        if (!isAuthenticated)
+        //        {
+        //            throw new ArgumentException("Invalid login credentials.");
+        //        }
 
-                string token = _jwtManager.GenerateAccessToken(user);
+        //        string token = _jwtManager.GenerateAccessToken(user);
 
-                var responseLoginDto = new ResponseLoginDto
-                {
-                    token = token,
-                    email = user.Email, // Ajout de l'email de l'utilisateur
-                    userId = user.Id, // Ajout de l'ID de l'utilisateur
-                    Role = user.Role // Ajout de la propriété role
-                };
+        //        var responseLoginDto = new ResponseLoginDto
+        //        {
+        //            token = token,
+        //            email = user.Email, // Ajout de l'email de l'utilisateur
+        //            userId = user.Id, // Ajout de l'ID de l'utilisateur
+        //            Role = user.Role // Ajout de la propriété role
+        //        };
 
-                return responseLoginDto;
-            }
-            catch (Exception ex)
-            {
-                Console.Error.WriteLine(ex.Message);
-                throw new ArgumentException("Authentication failed.");
-            }
-        }
+        //        return responseLoginDto;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Console.Error.WriteLine(ex.Message);
+        //        throw new ArgumentException("Authentication failed.");
+        //    }
+        //}
 
         //public async Task<UserDto> GetUserById(int userId)
         //{
@@ -101,6 +102,47 @@ namespace App.ApplicationCore.Services
         //        throw new ArgumentException("Failed to fetch user.");
         //    }
         //}
+        public async Task<ResponseLoginDto> AuthenticateUser(UserCredentialsDto userCredentials)
+        {
+            try
+            {
+                var user = await _userRepository.GetUserByEmailAsync(userCredentials.Email);
+
+                if (user == null)
+                {
+                    throw new AuthenticationException("Invalid login credentials.");
+                }
+
+                var isAuthenticated = PasswordService.VerifyPassword(user.PasswordHash, userCredentials.Password);
+
+                if (!isAuthenticated)
+                {
+                    throw new AuthenticationException("Invalid login credentials.");
+                }
+
+                string token = _jwtManager.GenerateAccessToken(user);
+
+                var responseLoginDto = new ResponseLoginDto
+                {
+                    token = token,
+                    email = user.Email,
+                    userId = user.Id,
+                    Role = user.Role
+                };
+
+                return responseLoginDto;
+            }
+            catch (AuthenticationException ex)
+            {
+                Console.Error.WriteLine(ex.Message);
+                throw; // Ré-émet l'exception sans la modifier
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine(ex.Message);
+                throw new AuthenticationException("Authentication failed.");
+            }
+        }
 
 
         public async Task<string> RefreshToken(string refreshToken)

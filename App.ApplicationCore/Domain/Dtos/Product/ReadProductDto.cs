@@ -15,6 +15,7 @@ namespace App.ApplicationCore.Domain.Dtos.Product
         public required string Description { get; set; }
         public string ImageUrl { get; set; }
         public decimal Inventory { get; set; }
+        public Guid CategoryId { get; set; }
         public ReadCategoryDto Category { get; set; }
     }
 }

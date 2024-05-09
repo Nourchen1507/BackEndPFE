@@ -4,6 +4,7 @@ using App.ApplicationCore.Domain.Entities;
 using App.ApplicationCore.Interfaces;
 
 using App.Infrastructure.Persistance;
+using App.Infrastructure.Repositories;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -19,13 +20,15 @@ namespace App.UI.Web.Controller
     public class UsersController : ControllerBase
     {
         private readonly IUserService _userService;
+        private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
         private readonly ApplicationDbContext _applicationDbContext;
-        public UsersController(IUserService userService, IMapper mapper , ApplicationDbContext applicationDbContext)
+        public UsersController(IUserService userService, IMapper mapper , ApplicationDbContext applicationDbContext, IUserRepository userRepository)
         {
             _userService = userService;
             _applicationDbContext = applicationDbContext;
             _mapper = mapper;
+            _userRepository = userRepository;
         }
 
         [HttpGet]
@@ -74,8 +77,34 @@ namespace App.UI.Web.Controller
             return Ok(adminUser);
         }
 
+    
+        // [Authorize]
+        [HttpDelete("{id:Guid}")]
+        public async Task<ActionResult<bool>> DeleteUserAsync(Guid id, [FromBody] string email)
+        {
+            try
+            {
+                // Vérification de l'email
+                var user = await _userRepository.GetByIdAsync(id);
+                if (user == null || user.Email != email)
+                {
+                    return NotFound();
+                }
 
-
+                var result = await _userService.DeleteUserByIdAsync(id);
+                if (!result)
+                {
+                    return NotFound();
+                }
+                return true;
+            }
+            catch (Exception ex)
+            {
+                // Log l'exception pour le débogage
+                Console.Error.WriteLine(ex.Message);
+                return StatusCode(500); // Erreur interne du serveur
+            }
+        }
 
         [HttpPut("{id:Guid}")]
         //[Authorize]

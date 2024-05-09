@@ -11,8 +11,6 @@ namespace App.ApplicationCore.Domain.Dtos
    public class ResponseLoginDto
     {
 
-
-    
         public string email { get; set; }
         public  string token { get; set; }
   

@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace App.ApplicationCore.Services
 {
-   public class ProductService : IProductService
+    public class ProductService : IProductService
     {
         private readonly IProductRepository _productRepository;
         private readonly IMapper _mapper;
@@ -23,7 +23,7 @@ namespace App.ApplicationCore.Services
         private readonly ICategoryService _categoryService;
 
 
-        public ProductService(IProductRepository productRepository, ICategoryService categoryService ,IMapper mapper, ISanitizerService sanitizerService, ICategoryRepository categoryRepository)
+        public ProductService(IProductRepository productRepository, ICategoryService categoryService, IMapper mapper, ISanitizerService sanitizerService, ICategoryRepository categoryRepository)
         {
             _productRepository = productRepository;
             _mapper = mapper;
@@ -82,6 +82,12 @@ namespace App.ApplicationCore.Services
         //    }
 
         //}
+        public async Task<bool> DeleteProductAsync(Guid productId)
+        {
+
+            var result = await _productRepository.DeleteByIdAsync(productId);
+            return result;
+        }
 
         public async Task<ReadProductDto> CreateProductAsync(CreateProductDto createProductDto)
         {
@@ -211,45 +217,29 @@ namespace App.ApplicationCore.Services
         {
             try
             {
-                var sanitizedDto = _sanitizerService.SanitizeDto(updateProductDto);
-
                 var existingProduct = await _productRepository.GetByIdAsync(productId)
                     ?? throw new ArgumentException($"No Product with ID `{productId}` was found.");
 
-                var existingProductDto = _mapper.Map<UpdateProductDto>(existingProduct);
+                // Mise à jour des propriétés du produit avec les données du DTO
+                existingProduct.Name = updateProductDto.Name;
+                existingProduct.Description = updateProductDto.Description;
+                existingProduct.Price = updateProductDto.Price;
+                existingProduct.CategoryId = updateProductDto.CategoryId; // Mise à jour de l'ID de la catégorie
 
-                var updateProductDtoProperties = typeof(UpdateProductDto).GetProperties();
-                foreach (var property in updateProductDtoProperties)
-                {
-                    var dtoValue = property.GetValue(sanitizedDto);
-                    if (dtoValue is null or (object)"")
-                    {
-                        throw new ArgumentException($"{property.Name} is required.");
-                    }
+                // Mettez à jour le produit dans le repository
+                var updatedProduct = await _productRepository.UpdateAsync(productId, existingProduct);
 
-                    var product = existingProductDto.GetType().GetProperty(property.Name);
-                    product.SetValue(existingProductDto, dtoValue);
+                // Mapper les données mises à jour vers le DTO de lecture
+                var readProductDto = _mapper.Map<ReadProductDto>(updatedProduct);
 
-                }
-                _mapper.Map(existingProductDto, existingProduct);
-
-                var updateProduct = await _productRepository.UpdateAsync(existingProduct.Id, existingProduct);
-                var category = await _categoryRepository.GetByIdAsync(existingProduct.CategoryId);
-
-                var readProductDto = _mapper.Map<ReadProductDto>(updateProduct);
-                readProductDto.Category = _mapper.Map<ReadCategoryDto>(category);
                 return readProductDto;
             }
             catch (Exception ex)
             {
-                if (ex.InnerException != null)
-                {
-                    Console.WriteLine($"Inner Exception: {ex.InnerException.Message}");
-                }
-                throw;
+                // Gestion des erreurs
+                throw new ApplicationException("An error occurred while updating the product.", ex);
             }
         }
 
     }
-
 }

@@ -11,5 +11,6 @@ namespace App.ApplicationCore.Domain.Dtos.Order
         public Guid ProductId { get; set; }
         public int Quantity { get; set; }
         public decimal SubTotal { get; set; }
+        public Guid UserId { get; set; }
     }
 }

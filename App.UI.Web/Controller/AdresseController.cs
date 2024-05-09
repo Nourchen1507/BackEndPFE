@@ -34,7 +34,7 @@ namespace App.UI.Web.Controller
 
 
         [HttpGet]
-        public async Task<ActionResult<ReadAdresseDto>> GetAllAdrressesAsync()
+        public async Task<ActionResult<ReadAdresseDto>> GetAllAdresseAsync()
         {
             var adresse = await _applicationDbContext.Adresse.ToListAsync();
             return Ok(adresse);
@@ -42,8 +42,7 @@ namespace App.UI.Web.Controller
 
 
         [HttpPost]
-       
-        public async Task<ActionResult<ReadAdresseDto>> CreateCategoryAsync([FromBody] CreateAdresseDto addresseDto)
+        public async Task<ActionResult<ReadAdresseDto>> CreateAdresseAsync([FromBody] CreateAdresseDto addresseDto)
         {
             var adresse = await _adresseService.CreateAddresseAsync(addresseDto);
             return Ok(adresse);

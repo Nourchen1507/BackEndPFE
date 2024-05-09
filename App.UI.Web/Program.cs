@@ -65,6 +65,10 @@ builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<ITransactionService, TransactionService>();
 builder.Services.AddScoped<IAdresseService, AdresseService>();
+builder.Services.AddScoped<IStripeService,StripeService>();
+builder.Services.AddScoped<IFactureService, FactureService>();
+builder.Services.AddScoped<StripeService>();
+builder.Services.AddScoped<FactureService>();
 
 
 
@@ -114,11 +118,16 @@ builder.Services.AddSwaggerGen(options =>
     options.OperationFilter<SecurityRequirementsOperationFilter>();
 });
 
-builder.Services.AddCors(options => options.AddPolicy(name: "",
-    policy => {
-        policy.WithOrigins("http://localhost:4200").AllowAnyMethod().AllowAnyHeader();
-
-    }));
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(builder =>
+    {
+        builder.WithOrigins("http://localhost:4200")
+                .AllowAnyHeader()
+                .AllowAnyMethod();
+        
+    });
+});
 
 
 //automapper
@@ -132,7 +141,7 @@ app.UseDeveloperExceptionPage();
 app.UseSwagger();
 app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "Application E-commerce"); });
 
-app.UseCors("");
+app.UseCors();
 
 app.UseHttpsRedirection();
 

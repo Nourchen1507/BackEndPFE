@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace App.ApplicationCore.Domain.Entities
 {
-   public class DeliveryMethod : BaseEntity
+   public class DeliveryMethode : BaseEntity
     {
 
 

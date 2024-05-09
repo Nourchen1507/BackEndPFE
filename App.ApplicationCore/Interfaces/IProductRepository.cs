@@ -12,6 +12,8 @@ namespace App.ApplicationCore.Interfaces
         Task<IEnumerable<Product>> GetProductsByCategoryIdAsync(Guid categoryId);
 
         Task<IEnumerable<Product>> GetProductsByCategoryNameAsync(string category);
+       
+
 
 
     }

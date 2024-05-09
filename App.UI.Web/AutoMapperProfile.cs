@@ -62,6 +62,7 @@ namespace App.UI.Web
             CreateMap<CreateAdresseDto, Adresse>();
             CreateMap<UpdateAdresseDto, Adresse>();
             CreateMap<ReadAdresseDto, Adresse>();
+            CreateMap<PaymentRequestDto, Facture>();
 
 
         }

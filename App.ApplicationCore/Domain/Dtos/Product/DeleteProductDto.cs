@@ -4,13 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace App.ApplicationCore.Domain.Dtos.Order
+namespace App.ApplicationCore.Domain.Dtos.Product
 {
-    public class OrderItemDto
+ public class DeleteProductDto
     {
 
+
         public Guid ProductId { get; set; }
-        public int Quantity { get; set; }
-        public Guid  UserId { get; set; }
+
+
     }
 }

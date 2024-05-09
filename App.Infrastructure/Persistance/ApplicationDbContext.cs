@@ -31,7 +31,8 @@ namespace App.Infrastructure.Persistance
         public DbSet<SoldeCarte> Solde { get; set; }
         public DbSet<Transaction> Transaction { get; set; }
         public DbSet<Adresse> Adresse { get; set; }
-    
+        public DbSet<DeliveryMethode> DeliveryMethode { get; set; }
+
         public ApplicationDbContext()
         {
 

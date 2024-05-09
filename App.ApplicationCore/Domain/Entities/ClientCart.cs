@@ -15,12 +15,12 @@ namespace App.ApplicationCore.Domain.Entities
         {
         }
 
-        public ClientCart(int id)
+        public ClientCart(Guid id)
         {
             Id = id;
         }
 
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         public List<OrderItem> Items { get; set; } = new List<OrderItem>();
         public int? DeliveryMethodId { get; set; }
         public string ClientSecret { get; set; }
