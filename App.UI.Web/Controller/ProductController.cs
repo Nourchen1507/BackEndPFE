@@ -95,15 +95,46 @@ namespace App.UI.Web.Controller
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         //[Authorize(Roles = "Admin")]
-        public async Task<ActionResult<ReadProductDto>> CreatProductAsync([FromBody] CreateProductDto product)
+        public async Task<IActionResult> CreateProductAsync([FromForm] CreateProductDto productDto, IFormFile image)
         {
-            if (!ModelState.IsValid)
+            try
             {
-                return BadRequest(ModelState);
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+
+                // Vérifiez si une image a été téléchargée
+                if (image == null || image.Length == 0)
+                {
+                    return BadRequest("Image file is required.");
+                }
+
+                // Validez les autres propriétés du produit dans productDto
+
+                // Enregistrez l'image sur le serveur
+                var uniqueFileName = Guid.NewGuid().ToString() + Path.GetExtension(image.FileName);
+                var filePath = Path.Combine("wwwroot/images", uniqueFileName);
+
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    await image.CopyToAsync(fileStream);
+                }
+
+                // Mettez à jour le chemin d'accès à l'image dans productDto
+                productDto.ImageUrl = $"/images/{uniqueFileName}";
+
+                // Appelez le service pour créer le produit avec l'image
+                var newProduct = await _productService.CreateProductAsync(productDto);
+
+                return Ok(newProduct);
             }
-            var newProduct = await _productService.CreateProductAsync(product);
-            return Ok(newProduct);
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { error = "An error occurred while creating the product.", message = ex.Message });
+            }
         }
+
 
         [HttpPost("delete")]
 

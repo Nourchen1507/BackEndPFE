@@ -23,7 +23,7 @@ namespace App.UI.Web.Controller
         private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
         private readonly ApplicationDbContext _applicationDbContext;
-        public UsersController(IUserService userService, IMapper mapper , ApplicationDbContext applicationDbContext, IUserRepository userRepository)
+        public UsersController(IUserService userService, IMapper mapper, ApplicationDbContext applicationDbContext, IUserRepository userRepository)
         {
             _userService = userService;
             _applicationDbContext = applicationDbContext;
@@ -59,7 +59,7 @@ namespace App.UI.Web.Controller
                 .FirstOrDefaultAsync(x => x.Id == id);
 
             if (
-                
+
                 user == null)
             {
 
@@ -77,7 +77,7 @@ namespace App.UI.Web.Controller
             return Ok(adminUser);
         }
 
-    
+
         // [Authorize]
         [HttpDelete("{id:Guid}")]
         public async Task<ActionResult<bool>> DeleteUserAsync(Guid id, [FromBody] string email)
@@ -128,6 +128,26 @@ namespace App.UI.Web.Controller
             }
             return Forbid();
         }
+        [HttpPost("update")]
+        public async Task<IActionResult> UpdateUser(UpdateUserDto model)
+        {
+            var existingUser = await _userRepository.GetByIdAsync(model.UserId);
+            if (existingUser == null)
+            {
+                return NotFound("Utilisateur non trouvé");
+            }
 
+            existingUser.LastName = model.LastName;
+            existingUser.FirstName = model.FirstName;
+            existingUser.AdresseId = model.AdresseId;
+            existingUser.Email = model.Email;
+            existingUser.Phone = model.Phone;
+            existingUser.Localisation = model.Localisation;
+            existingUser.PasswordHash = model.Password;
+
+            var updatedUser = await _userRepository.UpdateAsync(existingUser.Id, existingUser); // Assurez-vous que existingUser.UserId est de type Guid
+
+            return Ok(updatedUser);
+        }
     }
 }
