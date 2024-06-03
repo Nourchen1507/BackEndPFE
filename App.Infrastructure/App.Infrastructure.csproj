@@ -4,7 +4,6 @@
     <OutputType>Library</OutputType>
     <TargetFramework>net7.0</TargetFramework>
 	  <IsPackable>true</IsPackable>
-	  <!-- Ajoutez cette ligne -->
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>disable</Nullable>
   </PropertyGroup>
