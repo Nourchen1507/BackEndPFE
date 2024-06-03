@@ -42,6 +42,16 @@ builder.Services.AddDbContext<ApplicationDbContext>((serviceProvider, options) =
 });
 
 
+   builder.Services.AddHttpClient<NexusService>((serviceProvider, client) =>
+    {
+        var configuration = serviceProvider.GetRequiredService<IConfiguration>();
+        var nexusUrl = configuration["Nexus:Url"];
+        var nexusApiKey = configuration["Nexus:ApiKey"];
+
+        client.BaseAddress = new Uri(nexusUrl);
+    });
+
+
 
 
 
