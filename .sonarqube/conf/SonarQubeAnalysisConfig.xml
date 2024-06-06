@@ -7,7 +7,7 @@
   <HasBeginStepCommandLineCredentials>true</HasBeginStepCommandLineCredentials>
   <SonarQubeHostUrl>http://192.168.232.129:9000</SonarQubeHostUrl>
   <SonarQubeVersion>10.5.1.90531</SonarQubeVersion>
-  <SonarProjectKey>App-UI-Web</SonarProjectKey>
+  <SonarProjectKey>App.UI.Web</SonarProjectKey>
   <AdditionalConfig>
     <ConfigSetting Id="BuildUri" />
     <ConfigSetting Id="TfsUri" />
