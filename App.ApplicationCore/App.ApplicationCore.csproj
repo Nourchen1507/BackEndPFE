@@ -1,13 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
-  <PropertyGroup>
-    <OutputType>Library</OutputType>
-    <TargetFramework>net7.0</TargetFramework>
-	  <IsPackable>true</IsPackable>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>disable</Nullable>
-  </PropertyGroup>
-
+	<Project Sdk="Microsoft.NET.Sdk">
+		<PropertyGroup>
+			<OutputType>Library</OutputType>
+			<TargetFramework>net7.0</TargetFramework>
+			<IsPackable>true</IsPackable>
+			<ImplicitUsings>enable</ImplicitUsings>
+			<Nullable>disable</Nullable>
+			<!-- Spécifiez un nom de package personnalisé -->
+			<PackageId>App.ApplicationCore.1.0.0.nupkg</PackageId>
+		</PropertyGroup>
   <ItemGroup>
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.0" />
     <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
