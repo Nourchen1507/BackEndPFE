@@ -9,6 +9,10 @@ namespace App.ApplicationCore.Services
 {
     public class PasswordService
     {
+        public PasswordService()
+        {
+        }
+
         public static string HashPassword(string password)
         {
             string hashedPassword = BCrypt.Net.BCrypt.HashPassword(password);

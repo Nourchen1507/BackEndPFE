@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
@@ -34,6 +36,11 @@ namespace App.UI.Web.Authentification.OptionsSetup
                            Encoding.UTF8.GetBytes(jwtOptions.SecretKey))
                     };
                 });
+        }
+
+        internal static void ConfigureJwt(IServiceCollection services, ConfigurationManager configuration)
+        {
+            throw new NotImplementedException();
         }
     }
 }

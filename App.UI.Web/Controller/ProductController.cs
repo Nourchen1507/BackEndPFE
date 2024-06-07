@@ -66,7 +66,7 @@ namespace App.UI.Web.Controller
             {
                 return NotFound(ex.Message);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return StatusCode(500, "Internal server error");
             }
@@ -85,7 +85,7 @@ namespace App.UI.Web.Controller
             {
                 return NotFound(ex.Message);
             }
-            catch (Exception ex)
+            catch (Exception )
             {
                 return StatusCode(500, "Internal server error");
             }

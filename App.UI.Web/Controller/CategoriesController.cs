@@ -44,8 +44,7 @@ namespace App.UI.Web.Controller
 
 
         [HttpGet("{categoryId:Guid}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+     
         public async Task<ActionResult<ReadCategoryDto>> GetCategoryByIdAsync(Guid categoryId)
         {
             var category = await _categoryService.GetCategoryByIdAsync(categoryId);
