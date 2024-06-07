@@ -5,11 +5,9 @@ using System.Text.RegularExpressions;
 
 namespace App.ApplicationCore.Common
 {
-    public class Validator
+    public class  Validator
     {
-        public Validator()
-        {
-        }
+     
 
         public static bool IsValidURL(string url)
         {
