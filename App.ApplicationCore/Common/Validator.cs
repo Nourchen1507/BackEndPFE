@@ -7,6 +7,10 @@ namespace App.ApplicationCore.Common
 {
     public class Validator
     {
+        public Validator()
+        {
+        }
+
         public static bool IsValidURL(string url)
         {
             string pattern = @"^(http|https)://[\w\-.]+(:\d+)?(/([\w/_\.]*(\?\S+)?)?)?$";
