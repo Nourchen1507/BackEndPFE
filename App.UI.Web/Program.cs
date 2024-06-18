@@ -26,8 +26,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 
 // Lire les variables d'environnement
-string username = Environment.GetEnvironmentVariable("USERNAME") ?? "defaultUser";
-string password = Environment.GetEnvironmentVariable("PASSWORD") ?? "defaultPassword";
+//string username = Environment.GetEnvironmentVariable("USERNAME") ?? "defaultUser";
+//string password = Environment.GetEnvironmentVariable("PASSWORD") ?? "defaultPassword";
 
 
 
