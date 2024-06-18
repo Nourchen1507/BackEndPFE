@@ -25,6 +25,11 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 
+// Lire les variables d'environnement
+string username = Environment.GetEnvironmentVariable("USERNAME") ?? "defaultUser";
+string password = Environment.GetEnvironmentVariable("PASSWORD") ?? "defaultPassword";
+
+
 
 builder.Services.AddDbContext<ApplicationDbContext>((serviceProvider, options) =>
 {
